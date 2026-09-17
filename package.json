@@ -1,0 +1,16 @@
+{
+  "name": "shopflow",
+  "version": "1.0.0",
+  "description": "ShopFlow — E-commerce caching learning project",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "install:all": "cd server && npm install && cd ../client && npm install",
+    "seed": "cd server && npm run seed"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
