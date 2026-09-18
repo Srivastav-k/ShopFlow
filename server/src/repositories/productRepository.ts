@@ -1,5 +1,10 @@
-import { products, orders, getNextProductId } from '../db/database.js';
-import type { Product, ProductQueryParams, CreateProductDTO, UpdateProductDTO } from '../types/index.js';
+import { products, orders, getNextProductId } from "../db/database.js";
+import type {
+  Product,
+  ProductQueryParams,
+  CreateProductDTO,
+  UpdateProductDTO,
+} from "../types/index.js";
 
 export const productRepository = {
   findAll(params: ProductQueryParams) {
@@ -12,7 +17,7 @@ export const productRepository = {
         (p) =>
           p.name.toLowerCase().includes(term) ||
           p.description.toLowerCase().includes(term) ||
-          p.category.toLowerCase().includes(term)
+          p.category.toLowerCase().includes(term),
       );
     }
 
@@ -25,27 +30,30 @@ export const productRepository = {
 
     // Sort
     switch (params.sort) {
-      case 'price_asc':
+      case "price_asc":
         filtered.sort((a, b) => a.price - b.price);
         break;
-      case 'price_desc':
+      case "price_desc":
         filtered.sort((a, b) => b.price - a.price);
         break;
-      case 'name_asc':
+      case "name_asc":
         filtered.sort((a, b) => a.name.localeCompare(b.name));
         break;
-      case 'name_desc':
+      case "name_desc":
         filtered.sort((a, b) => b.name.localeCompare(a.name));
         break;
-      case 'newest':
+      case "newest":
       default:
-        filtered.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        filtered.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
         break;
     }
 
     // Pagination
-    const page = parseInt(params.page || '1') || 1;
-    const limit = parseInt(params.limit || '10') || 10;
+    const page = parseInt(params.page || "1") || 1;
+    const limit = parseInt(params.limit || "10") || 10;
     const offset = (page - 1) * limit;
     const totalPages = Math.ceil(totalItems / limit);
     const paginated = filtered.slice(offset, offset + limit);
@@ -68,7 +76,7 @@ export const productRepository = {
       category: data.category,
       price: data.price,
       description: data.description,
-      imageUrl: data.imageUrl || '',
+      imageUrl: data.imageUrl || "",
       stock: data.stock,
       createdAt: now,
       updatedAt: now,

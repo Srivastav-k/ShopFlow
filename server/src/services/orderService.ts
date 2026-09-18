@@ -3,20 +3,25 @@ import { productRepository } from '../repositories/productRepository.js';
 import { NotFoundError, ValidationError } from '../utils/AppError.js';
 import type { CreateOrderDTO, OrderItem } from '../types/index.js';
 
+const delay = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
+
 const DEMO_USER_ID = 1;
 
 export const orderService = {
-  getAll() {
+  async getAll() {
+    await delay(100);
     return orderRepository.findAll(DEMO_USER_ID);
   },
 
-  getById(id: number) {
+  async getById(id: number) {
+    await delay(100);
     const order = orderRepository.findById(id);
     if (!order) throw new NotFoundError('Order', id);
     return order;
   },
 
-  create(data: CreateOrderDTO) {
+  async create(data: CreateOrderDTO) {
+    await delay(100);
     if (!data.items || !Array.isArray(data.items) || data.items.length === 0) {
       throw new ValidationError('Order must contain at least one item');
     }

@@ -1,44 +1,59 @@
-import type { Request, Response, NextFunction } from 'express';
-import { categoryService } from '../services/categoryService.js';
-import { formatSuccess, formatCreated } from '../utils/responseFormatter.js';
+import type { Request, Response, NextFunction } from "express";
+import { categoryService } from "../services/categoryService.js";
+import { formatSuccess, formatCreated } from "../utils/responseFormatter.js";
 
 export const categoryController = {
-  getAll(_req: Request, res: Response, next: NextFunction) {
+  async getAll(_req: Request, res: Response, next: NextFunction) {
     try {
-      const categories = categoryService.getAll();
+      const categories = await categoryService.getAll();
       const { statusCode, body } = formatSuccess(categories);
       res.status(statusCode).json(body);
-    } catch (err) { next(err); }
+    } catch (err) {
+      next(err);
+    }
   },
 
-  getById(req: Request, res: Response, next: NextFunction) {
+  async getById(req: Request, res: Response, next: NextFunction) {
     try {
-      const category = categoryService.getById(parseInt(req.params.id));
+      const category = await categoryService.getById(
+        parseInt(req.params.id as string),
+      );
       const { statusCode, body } = formatSuccess(category);
       res.status(statusCode).json(body);
-    } catch (err) { next(err); }
+    } catch (err) {
+      next(err);
+    }
   },
 
-  create(req: Request, res: Response, next: NextFunction) {
+  async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const category = categoryService.create(req.body);
+      const category = await categoryService.create(req.body);
       const { statusCode, body } = formatCreated(category);
       res.status(statusCode).json(body);
-    } catch (err) { next(err); }
+    } catch (err) {
+      next(err);
+    }
   },
 
-  update(req: Request, res: Response, next: NextFunction) {
+  async update(req: Request, res: Response, next: NextFunction) {
     try {
-      const category = categoryService.update(parseInt(req.params.id), req.body);
+      const category = await categoryService.update(
+        parseInt(req.params.id as string),
+        req.body,
+      );
       const { statusCode, body } = formatSuccess(category);
       res.status(statusCode).json(body);
-    } catch (err) { next(err); }
+    } catch (err) {
+      next(err);
+    }
   },
 
-  delete(req: Request, res: Response, next: NextFunction) {
+  async delete(req: Request, res: Response, next: NextFunction) {
     try {
-      categoryService.delete(parseInt(req.params.id));
+      await categoryService.delete(parseInt(req.params.id as string));
       res.status(204).send();
-    } catch (err) { next(err); }
+    } catch (err) {
+      next(err);
+    }
   },
 };

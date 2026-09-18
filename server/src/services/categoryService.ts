@@ -2,25 +2,31 @@ import { categoryRepository } from '../repositories/categoryRepository.js';
 import { NotFoundError, ValidationError, ConflictError } from '../utils/AppError.js';
 import type { CreateCategoryDTO, UpdateCategoryDTO } from '../types/index.js';
 
+const delay = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
+
 export const categoryService = {
-  getAll() {
+  async getAll() {
+    await delay(100);
     return categoryRepository.findAll();
   },
 
-  getById(id: number) {
+  async getById(id: number) {
+    await delay(100);
     const category = categoryRepository.findById(id);
     if (!category) throw new NotFoundError('Category', id);
     return category;
   },
 
-  create(data: CreateCategoryDTO) {
+  async create(data: CreateCategoryDTO) {
+    await delay(100);
     if (!data.name?.trim()) throw new ValidationError('Category name is required');
     const existing = categoryRepository.findByName(data.name.trim());
     if (existing) throw new ConflictError(`Category "${data.name}" already exists`);
     return categoryRepository.create({ name: data.name.trim(), description: data.description || '' });
   },
 
-  update(id: number, data: UpdateCategoryDTO) {
+  async update(id: number, data: UpdateCategoryDTO) {
+    await delay(100);
     const existing = categoryRepository.findById(id);
     if (!existing) throw new NotFoundError('Category', id);
     if (data.name !== undefined) {
@@ -31,7 +37,8 @@ export const categoryService = {
     return categoryRepository.update(id, data)!;
   },
 
-  delete(id: number) {
+  async delete(id: number) {
+    await delay(100);
     const existing = categoryRepository.findById(id);
     if (!existing) throw new NotFoundError('Category', id);
     if (categoryRepository.hasProducts(id)) {
